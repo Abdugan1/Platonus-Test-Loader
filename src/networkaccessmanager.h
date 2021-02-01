@@ -6,14 +6,19 @@
 #include <QNetworkReply>
 #include <QUrl>
 
+typedef  QNetworkReply::NetworkError ErrorStatus;
+
 class NetworkAccessManager : public QNetworkAccessManager
 {
     Q_OBJECT
 public:
     NetworkAccessManager(QObject* parent = nullptr);
 
-    QString sendGet(const QUrl& url);
-    QString sendPost(const QUrl& url, const QString& postDataStr);
+    void sendGet(const QUrl& url);
+    void sendPost(const QUrl& url, const QString& postDataStr);
+
+    const ErrorStatus& errorStatus() const;
+    const QString& content() const;
 
     const QString& token() const;
     void setToken(const QString& tok);
@@ -23,7 +28,8 @@ private:
     void setErrorStatus(const QNetworkReply* reply);
 
     QString token_;
-    QNetworkReply::NetworkError errorStatus_;
+    QString content_;
+    ErrorStatus errorStatus_;
 };
 
 #endif // NETWORKACCESSMANAGER_H

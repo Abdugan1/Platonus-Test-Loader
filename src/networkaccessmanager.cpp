@@ -8,7 +8,7 @@ NetworkAccessManager::NetworkAccessManager(QObject* parent)
 
 }
 
-QString NetworkAccessManager::sendGet(const QUrl& url)
+void NetworkAccessManager::sendGet(const QUrl& url)
 {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -17,10 +17,10 @@ QString NetworkAccessManager::sendGet(const QUrl& url)
     QNetworkReply* reply = QNetworkAccessManager::get(request);
     waitUntillFinished(reply);
     setErrorStatus(reply);
-    return reply->readAll();
+    content_ = reply->readAll();
 }
 
-QString NetworkAccessManager::sendPost(const QUrl& url, const QString& postDataStr)
+void NetworkAccessManager::sendPost(const QUrl& url, const QString& postDataStr)
 {
     QNetworkRequest request(url);
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
@@ -31,7 +31,17 @@ QString NetworkAccessManager::sendPost(const QUrl& url, const QString& postDataS
     QNetworkReply* reply = QNetworkAccessManager::post(request, data);
     waitUntillFinished(reply);
     setErrorStatus(reply);
-    return reply->readAll();
+    content_ = reply->readAll();
+}
+
+const ErrorStatus& NetworkAccessManager::errorStatus() const
+{
+    return errorStatus_;
+}
+
+const QString& NetworkAccessManager::content() const
+{
+    return content_;
 }
 
 const QString& NetworkAccessManager::token() const
