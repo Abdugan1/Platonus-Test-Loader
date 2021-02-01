@@ -18,6 +18,8 @@ public:
     ~PlatonusTestLoader();
 signals:
     void logOuted();
+public slots:
+    void obtainTestsData();
 private slots:
     void logOut();
     void on_logOutButton_clicked();

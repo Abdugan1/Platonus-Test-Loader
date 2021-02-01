@@ -8,6 +8,7 @@ PlatonusTestLoaderApp::PlatonusTestLoaderApp(QObject* parent)
     , platonusTestLoader_(networkCtrl_)
 {
     connect(&authorization_, SIGNAL(success()), this, SLOT(onSuccessAuthorization()));
+    connect(&authorization_, SIGNAL(success()), &platonusTestLoader_, SLOT(obtainTestsData()));
     connect(&platonusTestLoader_, SIGNAL(logOuted()), this, SLOT(onLogOut()));
 
     authorization_.show();

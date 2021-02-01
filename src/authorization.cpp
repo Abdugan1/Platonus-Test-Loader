@@ -54,7 +54,7 @@ void Authorization::logIn(const QString& username, const QString& password)
 
     QString content = networkCtrl_->content();
     setToken(content);
-    qDebug() << "class Authorization\ntoken: " << networkCtrl_->token();
+    qDebug() << "class Authorization\ntoken: " << networkCtrl_->token().toUtf8();
     emit success();
 }
 

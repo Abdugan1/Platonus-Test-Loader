@@ -18,6 +18,7 @@ void NetworkAccessManager::sendGet(const QUrl& url)
     waitUntillFinished(reply);
     setErrorStatus(reply);
     content_ = reply->readAll();
+    reply->deleteLater();
 }
 
 void NetworkAccessManager::sendPost(const QUrl& url, const QString& postDataStr)
@@ -32,6 +33,7 @@ void NetworkAccessManager::sendPost(const QUrl& url, const QString& postDataStr)
     waitUntillFinished(reply);
     setErrorStatus(reply);
     content_ = reply->readAll();
+    reply->deleteLater();
 }
 
 const ErrorStatus& NetworkAccessManager::errorStatus() const
