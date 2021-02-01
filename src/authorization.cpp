@@ -47,7 +47,6 @@ void Authorization::logIn(const QString& username, const QString& password)
 
     networkCtrl_->sendPost(logInUrl, data);
 
-
     if (networkCtrl_->errorStatus() != ErrorStatus::NoError) {
         QMessageBox::warning(this, tr("Authorization failed"), tr("Invalid password or username"));
         return;

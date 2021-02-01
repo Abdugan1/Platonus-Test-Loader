@@ -12,12 +12,14 @@ SOURCES += \
     src/authorization.cpp \
     src/internal.cpp \
     src/main.cpp \
-    src/networkaccessmanager.cpp
+    src/networkaccessmanager.cpp \
+    src/platonustestloaderapp.cpp
 
 HEADERS += \
     src/authorization.h \
     src/internal.h \
-    src/networkaccessmanager.h
+    src/networkaccessmanager.h \
+    src/platonustestloaderapp.h
 
 FORMS += \
     src/authorization.ui

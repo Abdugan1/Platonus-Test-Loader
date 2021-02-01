@@ -1,4 +1,4 @@
-#include "authorization.h"
+#include "platonustestloaderapp.h"
 #include "networkaccessmanager.h"
 
 #include <QApplication>
@@ -7,8 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    Authorization authorization(new NetworkAccessManager);
-    authorization.show();
+    PlatonusTestLoaderApp platonusTestLoaderApp;
 
     return app.exec();
 }
