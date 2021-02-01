@@ -2,6 +2,7 @@
 #define PLATONUSTESTLOADERAPP_H
 
 #include "authorization.h"
+#include "platonustestloader.h"
 
 #include <QObject>
 
@@ -16,10 +17,12 @@ public:
 signals:
 private slots:
     void onSuccessAuthorization();
+    void onLogOut();
 private:
     NetworkAccessManager* networkCtrl_;
 
     Authorization authorization_;
+    PlatonusTestLoader platonusTestLoader_;
 };
 
 #endif // PLATONUSTESTLOADERAPP_H
