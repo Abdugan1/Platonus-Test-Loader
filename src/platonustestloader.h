@@ -10,6 +10,7 @@ class PlatonusTestLoader;
 }
 
 class NetworkAccessManager;
+struct QuestionData;
 
 typedef TestButton::TestData TestData;
 
@@ -38,6 +39,7 @@ private:
     TestButton* createButton(const TestData& testData);
     void deleteAllTestsButton();
     void loadTest(const TestData& testData);
+    QList<QuestionData> getQuestionsData(const QStringList& questionBlocks);
 
     Ui::PlatonusTestLoader *ui;
     NetworkAccessManager* networkCtrl_;

@@ -6,14 +6,9 @@
 struct QuestionData
 {
     QString text;
-    QStringList answeredVariants;
+    QStringList variants;
     QString id;
     bool correctAnswered = true;
-};
-
-struct PersonInfo
-{
-    QString name;
 };
 
 #endif // DATAS_H

@@ -2,6 +2,7 @@
 #include "ui_platonustestloader.h"
 #include "networkaccessmanager.h"
 #include "internal.h"
+#include "datas.h"
 
 #include <QMessageBox>
 
@@ -119,13 +120,55 @@ void PlatonusTestLoader::loadTest(const TestData& testData)
     const QUrl testingUrl("https://edu2.aues.kz/rest/testing_student/testing/ru/" + testData.id);
     networkCtrl_->sendGet(testingUrl);
     QString content = networkCtrl_->content();
-
     static const QRegularExpression questionBlockRegex("{\"questionType\".*?"
                                                         "\"variants\":\\[{.*?}\\].*?}");
     QStringList questionBlocks = Internal::getAllMatches(content, questionBlockRegex, 0);
+    QList<QuestionData> questionDataList = getQuestionsData(questionBlocks);
+
     int i = 0;
-    for (const auto & questionBlock : qAsConst(questionBlocks))
-        qDebug() << ++i << "\n\n" << questionBlock << "\n================================================================";
+    for (const auto& questionData : questionDataList) {
+        qDebug() << ++i;
+        qDebug() << "Text:\n" << questionData.text;
+        qDebug() << "id:\n" << questionData.id;
+        qDebug() << "variants:\n" << questionData.variants;
+        qDebug() << "================================================================";
+    }
+
+}
+
+QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& questionBlocks)
+{
+    QList<QuestionData> questionDataList;
+
+    static const QRegularExpression questionTextReg("\\\"questionText\\\":\\\"(.*)\\\",\\\"number");
+    static const QRegularExpression questionIdReg("questionID\\\":(\\d+)");
+    static const QRegularExpression answeredVariantReg(":\\\"(((?!value).)*)\\\",\\\"changed\\\":true");
+
+    static auto deleteJunk = [](QString& str) {
+        static const QRegularExpression junkReg("<<(((?!img).)*)>>");
+        str = str.remove(junkReg);
+    };
+
+    for (const auto& questionBlock : questionBlocks) {
+        QString     questionText        = Internal::getAllMatches(questionBlock, questionTextReg).first();
+        QString     questionId          = Internal::getAllMatches(questionBlock, questionIdReg).first();
+        QStringList answeredVariants    = Internal::getAllMatches(questionBlock, answeredVariantReg);
+
+        // deleting all junks, leaving only necessary
+        static const QRegularExpression junkReg("<<(((?!img).)*)>>");
+        deleteJunk(questionText);
+        for (auto& variant : answeredVariants)
+            deleteJunk(variant);
+
+        QuestionData questionData;
+        questionData.text       = questionText;
+        questionData.id         = questionId;
+        questionData.variants   = answeredVariants;
+
+        questionDataList.push_front(questionData);
+    }
+
+    return questionDataList;
 }
 
 void PlatonusTestLoader::on_startDateEdit_userDateChanged(const QDate &date)
