@@ -5,6 +5,8 @@
 #include "datas.h"
 
 #include <QMessageBox>
+#include <QFile>
+#include <QFileDialog>
 
 PlatonusTestLoader::PlatonusTestLoader(NetworkAccessManager* networkCtrl, QWidget *parent)
     : QMainWindow(parent)
@@ -125,7 +127,7 @@ void PlatonusTestLoader::loadTest(const TestData& testData)
     QStringList questionBlocks = Internal::getAllMatches(content, questionBlockRegex, 0);
     QList<QuestionData> questionDataList = getQuestionsData(questionBlocks);
 
-    int i = 0;
+    int i = 0; //just for debugging
     for (const auto& questionData : questionDataList) {
         qDebug() << ++i;
         qDebug() << "Text:\n" << questionData.text;
@@ -133,7 +135,30 @@ void PlatonusTestLoader::loadTest(const TestData& testData)
         qDebug() << "variants:\n" << questionData.variants;
         qDebug() << "================================================================";
     }
+    saveFile(testData, questionDataList);
+}
 
+void PlatonusTestLoader::saveFile(const TestData& testData, const QList<QuestionData>& questionDataList)
+{
+    QString filePath = QFileDialog::getSaveFileName(this, tr("Save File"), "./" + testData.name + ".html");
+    QFile file(filePath);
+    if (!file.open(QFile::WriteOnly | QFile::Text)) {
+        QMessageBox::warning(this, "Warning", "Cannot save file: " + file.errorString());
+        return;
+    }
+
+    QTextStream out(&file);
+    out.setCodec("UTF-8");
+    out.setGenerateByteOrderMark(true);
+
+    int i = 0;
+    for (const auto& questionData : questionDataList) {
+        out << ("<p>" + QString::number(++i) + ") #question# " + questionData.text + "</p>\n").toUtf8();
+        for (const auto& variant : questionData.variants)
+            out << ("<p><font color=\"green\">    #variant# " + variant + "</font></p>\n").toUtf8();
+    }
+
+    file.close();
 }
 
 QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& questionBlocks)

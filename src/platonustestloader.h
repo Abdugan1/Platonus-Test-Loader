@@ -39,6 +39,7 @@ private:
     TestButton* createButton(const TestData& testData);
     void deleteAllTestsButton();
     void loadTest(const TestData& testData);
+    void saveFile(const TestData& testData, const QList<QuestionData>& questionDataList);
     QList<QuestionData> getQuestionsData(const QStringList& questionBlocks);
 
     Ui::PlatonusTestLoader *ui;
