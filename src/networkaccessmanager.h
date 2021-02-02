@@ -16,6 +16,7 @@ public:
 
     void sendGet(const QUrl& url);
     void sendPost(const QUrl& url, const QString& postDataStr);
+    void sendPost(const QNetworkRequest& request, const QString& postDataStr);
 
     const ErrorStatus& errorStatus() const;
     const QString& content() const;

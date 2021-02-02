@@ -3,12 +3,6 @@
 
 #include <QStringList>
 
-struct TestData
-{
-    QString name;
-    QString id;
-};
-
 struct QuestionData
 {
     QString text;

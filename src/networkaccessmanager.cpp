@@ -36,6 +36,16 @@ void NetworkAccessManager::sendPost(const QUrl& url, const QString& postDataStr)
     reply->deleteLater();
 }
 
+void NetworkAccessManager::sendPost(const QNetworkRequest& request, const QString& postDataStr)
+{
+    QByteArray data(postDataStr.toStdString().c_str());
+    QNetworkReply* reply = QNetworkAccessManager::post(request, data);
+    waitUntillFinished(reply);
+    setErrorStatus(reply);
+    content_ = reply->readAll();
+    reply->deleteLater();
+}
+
 const ErrorStatus& NetworkAccessManager::errorStatus() const
 {
     return errorStatus_;

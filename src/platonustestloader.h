@@ -1,6 +1,8 @@
 #ifndef PLATONUSTESTLOADER_H
 #define PLATONUSTESTLOADER_H
 
+#include "testbutton.h"
+
 #include <QMainWindow>
 
 namespace Ui {
@@ -8,6 +10,8 @@ class PlatonusTestLoader;
 }
 
 class NetworkAccessManager;
+
+typedef TestButton::TestData TestData;
 
 class PlatonusTestLoader : public QMainWindow
 {
@@ -19,12 +23,20 @@ public:
 signals:
     void logOuted();
 public slots:
-    void obtainTestsData();
+    void showTestButtons();
 private slots:
     void logOut();
     void on_logOutButton_clicked();
+    void on_startDateEdit_userDateChanged(const QDate &date);
+    void on_finishDateEdit_userDateChanged(const QDate &date);
 
 private:
+    void sendAppealsRequest();
+    QList<TestData> getTestsData(const QString& replyContent);
+    void setTestsButton(const QList<TestData>& testDataList);
+    TestButton* createButton(const TestData& testData);
+//    void showTestButtons(const QList<>)
+    void deleteAllTestsButton();
 
     Ui::PlatonusTestLoader *ui;
     NetworkAccessManager* networkCtrl_;

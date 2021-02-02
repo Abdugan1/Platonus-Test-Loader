@@ -14,7 +14,8 @@ SOURCES += \
     src/main.cpp \
     src/networkaccessmanager.cpp \
     src/platonustestloader.cpp \
-    src/platonustestloaderapp.cpp
+    src/platonustestloaderapp.cpp \
+    src/testbutton.cpp
 
 HEADERS += \
     src/authorization.h \
@@ -22,7 +23,8 @@ HEADERS += \
     src/internal.h \
     src/networkaccessmanager.h \
     src/platonustestloader.h \
-    src/platonustestloaderapp.h
+    src/platonustestloaderapp.h \
+    src/testbutton.h
 
 FORMS += \
     src/authorization.ui \
