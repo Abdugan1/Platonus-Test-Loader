@@ -29,14 +29,15 @@ private slots:
     void on_logOutButton_clicked();
     void on_startDateEdit_userDateChanged(const QDate &date);
     void on_finishDateEdit_userDateChanged(const QDate &date);
+    void onTestButtonClicked();
 
 private:
     void sendAppealsRequest();
     QList<TestData> getTestsData(const QString& replyContent);
     void setTestsButton(const QList<TestData>& testDataList);
     TestButton* createButton(const TestData& testData);
-//    void showTestButtons(const QList<>)
     void deleteAllTestsButton();
+    void loadTest(const TestData& testData);
 
     Ui::PlatonusTestLoader *ui;
     NetworkAccessManager* networkCtrl_;
