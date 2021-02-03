@@ -80,10 +80,6 @@ QList<TestData> PlatonusTestLoader::getTestsData(const QString& replyContent)
     for (int i = 0; i < testingNames.size(); ++i)
         testDataList.push_back({*testingNamesIter++, *testingIdsIter++});
 
-    int i = 0;
-    for (const auto& testData : testDataList)
-        qDebug() << ++i << "Name:" << testData.name << "id:" << testData.id;
-
     return testDataList;
 }
 
@@ -126,15 +122,8 @@ void PlatonusTestLoader::loadTest(const TestData& testData)
                                                         "\"variants\":\\[{.*?}\\].*?}");
     QStringList questionBlocks = Internal::getAllMatches(content, questionBlockRegex, 0);
     QList<QuestionData> questionDataList = getQuestionsData(questionBlocks);
+    highlightIncorrect(questionDataList, testData);
 
-    int i = 0; //just for debugging
-    for (const auto& questionData : questionDataList) {
-        qDebug() << ++i;
-        qDebug() << "Text:\n" << questionData.text;
-        qDebug() << "id:\n" << questionData.id;
-        qDebug() << "variants:\n" << questionData.variants;
-        qDebug() << "================================================================";
-    }
     saveFile(testData, questionDataList);
 }
 
@@ -154,8 +143,17 @@ void PlatonusTestLoader::saveFile(const TestData& testData, const QList<Question
     int i = 0;
     for (const auto& questionData : questionDataList) {
         out << ("<p>" + QString::number(++i) + ") #question# " + questionData.text + "</p>\n").toUtf8();
-        for (const auto& variant : questionData.variants)
-            out << ("<p><font color=\"green\">#variant# " + variant + "</font></p>\n").toUtf8();
+
+        if (questionData.variants.isEmpty())
+            out << ("<p><font color=\"orange\">#variant# " + QString("didn't answered") + "</font></p>\n").toUtf8();
+
+        for (const auto& variant : questionData.variants) {
+            if (questionData.correctAnswered) {
+                out << ("<p><font color=\"green\">#variant# " + variant + "</font></p>\n").toUtf8();
+            } else {
+                out << ("<p><font color=\"red\">#variant# " + variant + "</font></p>\n").toUtf8();
+            }
+        }
     }
 
     file.close();
@@ -218,7 +216,7 @@ QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& ques
 void PlatonusTestLoader::highlightIncorrect(QList<QuestionData>& questionDataList
                                             , const TestData& testData)
 {
-    static const QUrl url("https://edu2.aues.kz/student_appeals?option=view&"
+    const QUrl url("https://edu2.aues.kz/student_appeals?option=view&"
                     "testingID=" + testData.id +"&countInPart=30startDate=nullfinishDate=null&"
                     "nocache=&1606359543&start_date=26-10-2020&2021-01-26=26-01-2021&page=0");
     networkCtrl_->sendGet(url);
@@ -229,10 +227,12 @@ void PlatonusTestLoader::highlightIncorrect(QList<QuestionData>& questionDataLis
     }
     QString content = networkCtrl_->content();
     static const QRegularExpression questionIdReg("id=\"q_(\\d+)\"");
-    QStringList incorrectAnswered = Internal::getAllMatches(content, questionIdReg);
+    QStringList incorrectAnsweredIds = Internal::getAllMatches(content, questionIdReg);
+
     for (auto& questionData : questionDataList) {
-        if (!incorrectAnswered.contains(questionData.id))
+        if (!incorrectAnsweredIds.contains(questionData.id))
             continue;
+
         questionData.correctAnswered = false;
     }
 }
