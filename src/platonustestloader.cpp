@@ -215,6 +215,28 @@ QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& ques
     return questionDataList;
 }
 
+void PlatonusTestLoader::highlightIncorrect(QList<QuestionData>& questionDataList
+                                            , const TestData& testData)
+{
+    static const QUrl url("https://edu2.aues.kz/student_appeals?option=view&"
+                    "testingID=" + testData.id +"&countInPart=30startDate=nullfinishDate=null&"
+                    "nocache=&1606359543&start_date=26-10-2020&2021-01-26=26-01-2021&page=0");
+    networkCtrl_->sendGet(url);
+    if (networkCtrl_->errorStatus() != ErrorStatus::NoError) {
+        QMessageBox::warning(this, tr("Highlight failed"), tr("Уvery answer will be correct.\n"
+                                                                "Although it may not be so."));
+        return;
+    }
+    QString content = networkCtrl_->content();
+    static const QRegularExpression questionIdReg("id=\"q_(\\d+)\"");
+    QStringList incorrectAnswered = Internal::getAllMatches(content, questionIdReg);
+    for (auto& questionData : questionDataList) {
+        if (!incorrectAnswered.contains(questionData.id))
+            continue;
+        questionData.correctAnswered = false;
+    }
+}
+
 void PlatonusTestLoader::on_startDateEdit_userDateChanged(const QDate &date)
 {
     showTestButtons();

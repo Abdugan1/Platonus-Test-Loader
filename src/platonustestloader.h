@@ -41,6 +41,7 @@ private:
     void loadTest(const TestData& testData);
     void saveFile(const TestData& testData, const QList<QuestionData>& questionDataList);
     QList<QuestionData> getQuestionsData(const QStringList& questionBlocks);
+    void highlightIncorrect(QList<QuestionData>& questionDataList, const TestData& testData);
 
     Ui::PlatonusTestLoader *ui;
     NetworkAccessManager* networkCtrl_;
