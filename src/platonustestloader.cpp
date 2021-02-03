@@ -155,7 +155,7 @@ void PlatonusTestLoader::saveFile(const TestData& testData, const QList<Question
     for (const auto& questionData : questionDataList) {
         out << ("<p>" + QString::number(++i) + ") #question# " + questionData.text + "</p>\n").toUtf8();
         for (const auto& variant : questionData.variants)
-            out << ("<p><font color=\"green\">    #variant# " + variant + "</font></p>\n").toUtf8();
+            out << ("<p><font color=\"green\">#variant# " + variant + "</font></p>\n").toUtf8();
     }
 
     file.close();
@@ -174,6 +174,16 @@ QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& ques
         str = str.remove(junkReg);
     };
 
+    static auto addHttp = [](QString& str) {
+        static const QRegularExpression imageIdReg("id=(\\d+)");
+        if (str.contains(imageIdReg)) {
+            QString imageId = Internal::getAllMatches(str, imageIdReg).first();
+
+            static const QRegularExpression imageSrcReg("<.*>");
+        str = str.replace(imageSrcReg, "<img src=\"https://edu2.aues.kz/getImage?id=" + imageId + "\">");
+        }
+    };
+
     for (const auto& questionBlock : questionBlocks) {
         QString     questionText        = Internal::getAllMatches(questionBlock, questionTextReg).first();
         QString     questionId          = Internal::getAllMatches(questionBlock, questionIdReg).first();
@@ -184,6 +194,15 @@ QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& ques
         deleteJunk(questionText);
         for (auto& variant : answeredVariants)
             deleteJunk(variant);
+
+        // if text or variants has image, then add http...
+        if (questionText.contains("getImage"))
+            addHttp(questionText);
+
+        for (auto& variant : answeredVariants) {
+            if (variant.contains("getImage"))
+                addHttp(variant);
+        }
 
         QuestionData questionData;
         questionData.text       = questionText;
