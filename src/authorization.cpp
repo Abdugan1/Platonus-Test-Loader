@@ -45,8 +45,13 @@ void Authorization::logIn(const QString& username, const QString& password)
     QString data = "{\"login\":\"" + username + "\",\"iin\":null,\"icNumber\":null,"
                         "\"password\":\"" + password + "\"}";
 
+#ifndef QT_NO_CURSOR
+    QGuiApplication::setOverrideCursor(QCursor(Qt::WaitCursor));
+#endif
     networkCtrl_->sendPost(logInUrl, data);
-
+#ifndef QT_NO_CURSOR
+    QGuiApplication::restoreOverrideCursor();
+#endif
     if (networkCtrl_->errorStatus() != ErrorStatus::NoError) {
         QMessageBox::warning(this, tr("Authorization failed"), tr("Invalid password or username"));
         return;
