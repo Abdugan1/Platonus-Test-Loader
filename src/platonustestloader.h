@@ -38,7 +38,7 @@ private:
     void setTestsButton(const QList<TestData>& testDataList);
     TestButton* createButton(const TestData& testData);
     void deleteAllTestsButton();
-    void loadTest(const TestData& testData);
+    void downloadTest(const TestData& testData);
     void saveFile(const TestData& testData, const QList<QuestionData>& questionDataList);
     QList<QuestionData> getQuestionsData(const QStringList& questionBlocks);
     void highlightIncorrect(QList<QuestionData>& questionDataList, const TestData& testData);

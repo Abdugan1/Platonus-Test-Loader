@@ -1,5 +1,5 @@
-#ifndef DATAS_H
-#define DATAS_H
+#ifndef QUESTIONDATA_H
+#define QUESTIONDATA_H
 
 #include <QStringList>
 
@@ -11,4 +11,4 @@ struct QuestionData
     bool correctAnswered = true;
 };
 
-#endif // DATAS_H
+#endif // QUESTIONDATA_H

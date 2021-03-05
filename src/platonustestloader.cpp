@@ -2,7 +2,7 @@
 #include "ui_platonustestloader.h"
 #include "networkaccessmanager.h"
 #include "internal.h"
-#include "datas.h"
+#include "questiondata.h"
 
 #include <QMessageBox>
 #include <QFile>
@@ -47,7 +47,7 @@ void PlatonusTestLoader::on_logOutButton_clicked()
 void PlatonusTestLoader::onTestButtonClicked()
 {
     TestData testData = qobject_cast<TestButton*>(sender())->testData;
-    loadTest(testData);
+    downloadTest(testData);
 }
 
 void PlatonusTestLoader::sendAppealsRequest()
@@ -113,7 +113,7 @@ void PlatonusTestLoader::deleteAllTestsButton()
     }
 }
 
-void PlatonusTestLoader::loadTest(const TestData& testData)
+void PlatonusTestLoader::downloadTest(const TestData& testData)
 {
     const QUrl testingUrl("https://edu2.aues.kz/rest/testing_student/testing/ru/" + testData.id);
     networkCtrl_->sendGet(testingUrl);

@@ -7,7 +7,8 @@ class TestButton : public QPushButton
 {
     Q_OBJECT
 public:
-    TestButton(const QString& text, QWidget* parent = nullptr);
+    TestButton(const QString& text, QWidget* parent = nullptr)
+        : QPushButton(text, parent) {}
 
     struct TestData
     {

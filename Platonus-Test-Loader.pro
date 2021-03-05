@@ -14,16 +14,15 @@ SOURCES += \
     src/main.cpp \
     src/networkaccessmanager.cpp \
     src/platonustestloader.cpp \
-    src/platonustestloaderapp.cpp \
-    src/testbutton.cpp
+    src/platonustestloaderapp.cpp
 
 HEADERS += \
     src/authorization.h \
-    src/datas.h \
     src/internal.h \
     src/networkaccessmanager.h \
     src/platonustestloader.h \
     src/platonustestloaderapp.h \
+    src/questiondata.h \
     src/testbutton.h
 
 FORMS += \
