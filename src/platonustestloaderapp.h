@@ -3,6 +3,7 @@
 
 #include "authorization.h"
 #include "platonustestloader.h"
+#include "testcombiner.h"
 
 #include <QObject>
 

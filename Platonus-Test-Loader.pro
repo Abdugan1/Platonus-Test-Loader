@@ -14,7 +14,8 @@ SOURCES += \
     src/main.cpp \
     src/networkaccessmanager.cpp \
     src/platonustestloader.cpp \
-    src/platonustestloaderapp.cpp
+    src/platonustestloaderapp.cpp \
+    src/testcombiner.cpp
 
 HEADERS += \
     src/authorization.h \
@@ -23,11 +24,13 @@ HEADERS += \
     src/platonustestloader.h \
     src/platonustestloaderapp.h \
     src/questiondata.h \
-    src/testbutton.h
+    src/testbutton.h \
+    src/testcombiner.h
 
 FORMS += \
     src/authorization.ui \
-    src/platonustestloader.ui
+    src/platonustestloader.ui \
+    src/testcombiner.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
