@@ -46,7 +46,7 @@ void TestCombiner::deleteAllFileNames()
         delete child;
     }
 }
-
+/// <!--{-->((?s).*?)<!--}-->
 QString TestCombiner::getFilesContent()
 {
     QRegularExpression questionTextReg("#question#(.*?)<");

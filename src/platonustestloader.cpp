@@ -142,6 +142,7 @@ void PlatonusTestLoader::saveFile(const TestData& testData, const QList<Question
 
     int i = 0;
     for (const auto& questionData : questionDataList) {
+        out << "<!--{-->\n";
         out << ("<p>" + QString::number(++i) + ") #question# " + questionData.text + "</p>\n").toUtf8();
 
         if (questionData.variants.isEmpty())
@@ -154,6 +155,7 @@ void PlatonusTestLoader::saveFile(const TestData& testData, const QList<Question
                 out << ("<p><font color=\"red\">#variant# " + variant + "</font></p>\n").toUtf8();
             }
         }
+        out << "<!--}-->\n";
     }
 
     file.close();
