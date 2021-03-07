@@ -26,6 +26,7 @@ private slots:
 private:
     void deleteAllFileNames();
     QString getFilesContent();
+    QList<QuestionData> getQuestionDatas(const QStringList& dataBloks);
     Ui::TestCombiner *ui;
     QStringList filePaths_;
 };

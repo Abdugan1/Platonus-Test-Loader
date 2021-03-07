@@ -25,10 +25,11 @@ TestCombiner::~TestCombiner()
 
 void TestCombiner::on_openFilesButton_clicked()
 {
+    filePaths_ = QFileDialog::getOpenFileNames(this);
+
     if (!ui->fileNamesLayout->isEmpty())
         deleteAllFileNames();
 
-    filePaths_ = QFileDialog::getOpenFileNames(this);
     for (const auto& filePath : filePaths_) {
         QString fileName = filePath.mid(filePath.lastIndexOf("/") + 1);
         QLabel* fileNameLabel = new QLabel(fileName);
@@ -46,14 +47,10 @@ void TestCombiner::deleteAllFileNames()
         delete child;
     }
 }
-/// <!--{-->((?s).*?)<!--}-->
+
 QString TestCombiner::getFilesContent()
 {
-    QRegularExpression questionTextReg("#question#(.*?)<");
-    QRegularExpression variantReg("#variant#(.*?)<");
-    QRegularExpression fontColorReg("<font color=\\\"(.*?)\\\">");
-
-    QList<QuestionData> questionDatas;
+    QString content;
     for (const auto& filePath : filePaths_) {
         QFile file(filePath);
         if (!file.open(QIODevice::ReadOnly | QFile::Text)) {
@@ -61,33 +58,46 @@ QString TestCombiner::getFilesContent()
             return QString();
         }
         QTextStream in(&file);
-        QString line = in.readLine();
-        while (!in.atEnd()) {
-            QuestionData questionData;
-            questionData.text = Internal::getAllMatches(line, questionTextReg).first();
-            line = in.readLine();
-            while (!line.contains("#question#") && line.contains("#")) {
-                QString variant = Internal::getAllMatches(line, variantReg).first();
-                questionData.variants.append(variant);
-                QString fontColor = Internal::getAllMatches(line, fontColorReg).first();
-                questionData.correctAnswered = (fontColor == "green");
-                line = in.readLine();
-            }
-            questionDatas.append(questionData);
+        content += in.readAll();
+    }
+    return content;
+}
+
+QList<QuestionData> TestCombiner::getQuestionDatas(const QStringList &dataBloks)
+{
+    QList<QuestionData> questionDatas;
+    for (const auto& block : dataBloks) {
+        QStringList blocksInfo = Internal::getAllMatches(block.trimmed()
+                                                   , QRegularExpression("<p>(.*?)<\\/p>"));
+        QuestionData questionData;
+
+        for (const auto& info : blocksInfo) {
+            if (info.contains("#question#"))
+                questionData.text = info;
+            else
+                questionData.variants.append(info);
         }
+        QString variant = questionData.variants.first();
+        questionData.correctAnswered = variant.contains("<font color=\"green\">");
 
-        file.close();
+        questionDatas.append(questionData);
     }
-    for (const auto& questionData : questionDatas) {
-        qDebug() << "text:"<<questionData.text;
-        qDebug() << "variants: " << questionData.variants;
-        qDebug() << "CA:" << questionData.correctAnswered;
-    }
-
-    return QString();
+    return questionDatas;
 }
 
 void TestCombiner::on_combineButton_clicked()
 {
-    getFilesContent();
+    QString content = getFilesContent();
+    static const QRegularExpression blockRegex("<!--{-->((?s).*?)<!--}-->");
+    QStringList dataBlocks = Internal::getAllMatches(content, blockRegex);
+
+    QList<QuestionData> questionDatas = getQuestionDatas(dataBlocks);
+
+    int i = 0;
+    for (const auto & questionData : questionDatas) {
+        qDebug() << ++i;
+        qDebug() << "text: " << questionData.text;
+        qDebug() << "vars: " << questionData.variants;
+        qDebug() << "================================";
+    }
 }
