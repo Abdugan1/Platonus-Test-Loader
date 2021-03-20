@@ -177,10 +177,12 @@ QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& ques
     static auto addHttp = [](QString& str) {
         static const QRegularExpression imageIdReg("id=(\\d+)");
         if (str.contains(imageIdReg)) {
-            QString imageId = Internal::getAllMatches(str, imageIdReg).first();
+            QStringList imageIds = Internal::getAllMatches(str, imageIdReg);
 
-            static const QRegularExpression imageSrcReg("<.*>");
-        str = str.replace(imageSrcReg, "<img src=\"https://edu2.aues.kz/getImage?id=" + imageId + "\">");
+            for (const auto& imageId : imageIds) {
+                const QRegularExpression imageSrcReg("<((?!https).)*?id=" + imageId + ".*?>");
+                str = str.replace(imageSrcReg, "<img src=\"https://edu2.aues.kz/getImage?id=" + imageId + "\">");
+            }
         }
     };
 
