@@ -23,6 +23,8 @@ public:
     ~PlatonusTestLoader();
 signals:
     void logOuted();
+    void dataIsReady(QWidget* parent, const QString& fileName
+                     , const QList<QuestionData>& questionDataList);
 public slots:
     void showTestButtons();
 private slots:
@@ -39,7 +41,6 @@ private:
     TestButton* createButton(const TestData& testData);
     void deleteAllTestsButton();
     void downloadTest(const TestData& testData);
-    void saveFile(const TestData& testData, const QList<QuestionData>& questionDataList);
     QList<QuestionData> getQuestionsData(const QStringList& questionBlocks);
     void highlightIncorrect(QList<QuestionData>& questionDataList, const TestData& testData);
 

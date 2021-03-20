@@ -16,6 +16,8 @@ public:
     explicit PlatonusTestLoaderApp(QObject *parent = nullptr);
 
 signals:
+public slots:
+    void saveFile(QWidget* parent, const QString& fileName, const QList<QuestionData>& questionDataList);
 private slots:
     void onSuccessAuthorization();
     void onLogOut();
@@ -24,6 +26,7 @@ private:
 
     Authorization authorization_;
     PlatonusTestLoader platonusTestLoader_;
+    TestCombiner testCombiner_;
 };
 
 #endif // PLATONUSTESTLOADERAPP_H

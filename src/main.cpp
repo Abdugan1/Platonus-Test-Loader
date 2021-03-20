@@ -7,9 +7,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-//    PlatonusTestLoaderApp platonusTestLoaderApp;
-    TestCombiner testCombiner;
-    testCombiner.show();
+    PlatonusTestLoaderApp platonusTestLoaderApp;
 
     return app.exec();
 }

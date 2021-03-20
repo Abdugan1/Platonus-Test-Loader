@@ -16,13 +16,12 @@ class TestCombiner : public QWidget
 public:
     explicit TestCombiner(QWidget *parent = nullptr);
     ~TestCombiner();
-
+signals:
+    void dataIsReady(QWidget* parent, const QString& fileName
+                     , const QList<QuestionData>& questionDataList);
 private slots:
-
     void on_openFilesButton_clicked();
-
     void on_combineButton_clicked();
-
 private:
     void deleteAllFileNames();
     QString getFilesContent();

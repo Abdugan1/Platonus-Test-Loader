@@ -124,41 +124,8 @@ void PlatonusTestLoader::downloadTest(const TestData& testData)
     QList<QuestionData> questionDataList = getQuestionsData(questionBlocks);
     highlightIncorrect(questionDataList, testData);
 
-    saveFile(testData, questionDataList);
-}
-
-void PlatonusTestLoader::saveFile(const TestData& testData, const QList<QuestionData>& questionDataList)
-{
-    QString filePath = QFileDialog::getSaveFileName(this, tr("Save File"), "./" + testData.name + ".html");
-    QFile file(filePath);
-    if (!file.open(QFile::WriteOnly | QFile::Text)) {
-        QMessageBox::warning(this, "Warning", "Cannot save file: " + file.errorString());
-        return;
-    }
-
-    QTextStream out(&file);
-    out.setCodec("UTF-8");
-    out.setGenerateByteOrderMark(true);
-
-    int i = 0;
-    for (const auto& questionData : questionDataList) {
-        out << "<!--{-->\n";
-        out << ("<p>" + QString::number(++i) + ") #question# " + questionData.text + "</p>\n").toUtf8();
-
-        if (questionData.variants.isEmpty())
-            out << ("<p><font color=\"orange\">#variant# " + QString("didn't answered") + "</font></p>\n").toUtf8();
-
-        for (const auto& variant : questionData.variants) {
-            if (questionData.correctAnswered) {
-                out << ("<p><font color=\"green\">#variant# " + variant + "</font></p>\n").toUtf8();
-            } else {
-                out << ("<p><font color=\"red\">#variant# " + variant + "</font></p>\n").toUtf8();
-            }
-        }
-        out << "<!--}-->\n";
-    }
-
-    file.close();
+    emit dataIsReady(this, testData.name, questionDataList);
+//    saveFile(testData, questionDataList);
 }
 
 QList<QuestionData> PlatonusTestLoader::getQuestionsData(const QStringList& questionBlocks)

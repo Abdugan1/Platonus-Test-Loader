@@ -93,6 +93,8 @@ void TestCombiner::on_combineButton_clicked()
 
     QList<QuestionData> questionDatas = getQuestionDatas(dataBlocks);
 
+//    emit dataIsReady(this, "", questionDatas);
+
     int i = 0;
     for (const auto & questionData : questionDatas) {
         qDebug() << ++i;
